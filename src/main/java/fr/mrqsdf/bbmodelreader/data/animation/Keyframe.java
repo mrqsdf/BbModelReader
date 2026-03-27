@@ -1,22 +1,35 @@
 package fr.mrqsdf.bbmodelreader.data.animation;
 
+import com.google.gson.annotations.SerializedName;
+
+import java.util.List;
+
 public class Keyframe {
 
     private String channel;
-    private DataPoint dataPoint;
+    @SerializedName("data_points")
+    private List<DataPoint> dataPoints;
     private String uuid;
     private Float time;
     private int color;
     private String interpolation;
     private String easing;
     private Object[] easingArgs;
+    @SerializedName("bezier_left_time")
+    private Float[] bezierLeftTime;
+    @SerializedName("bezier_right_time")
+    private Float[] bezierRightTime;
+    @SerializedName("bezier_left_value")
+    private Float[] bezierLeftValue;
+    @SerializedName("bezier_right_value")
+    private Float[] bezierRightValue;
 
     public String getChannel() {
         return channel;
     }
 
-    public DataPoint getDataPoint() {
-        return dataPoint;
+    public List<DataPoint> getDataPoints() {
+        return dataPoints;
     }
 
     public String getUuid() {
@@ -43,4 +56,19 @@ public class Keyframe {
         return easingArgs;
     }
 
+    public Float[] getBezierLeftTime() {
+        return bezierLeftTime;
+    }
+
+    public Float[] getBezierRightTime() {
+        return bezierRightTime;
+    }
+
+    public Float[] getBezierLeftValue() {
+        return bezierLeftValue;
+    }
+
+    public Float[] getBezierRightValue() {
+        return bezierRightValue;
+    }
 }

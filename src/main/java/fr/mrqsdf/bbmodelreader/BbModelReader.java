@@ -1,6 +1,8 @@
 package fr.mrqsdf.bbmodelreader;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import fr.mrqsdf.bbmodelreader.data.BbModel;
 
 import java.io.File;
@@ -12,6 +14,7 @@ import java.util.Objects;
 public class BbModelReader {
 
     private static final Map<String, BbModel> models = new HashMap<>();
+    private static final Gson gson = BbModelGson.create();
 
     /**
      * Load a model from a file
@@ -55,16 +58,50 @@ public class BbModelReader {
      * @return the model
      */
     public static BbModel loadModel(File file, String name) {
-        Gson gson = new Gson();
         String jsonString ;
         try {
             jsonString = new String(Files.readAllBytes(file.toPath()));
         } catch (Exception e) {
             throw new RuntimeException("Error while reading file " + name, e);
         }
-        BbModel model = gson.fromJson(jsonString, BbModel.class);
+        if (jsonString.startsWith("<lz>")) {
+            throw new IllegalArgumentException("Compressed bbmodel files ('<lz>...') are not supported yet");
+        }
+        JsonObject object = JsonParser.parseString(jsonString).getAsJsonObject();
+
+        if (!object.has("elements") && object.has("cubes")) {
+            object.add("elements", object.get("cubes"));
+        }
+
+        if (!object.has("model_identifier") && object.has("geometry_name")) {
+            object.add("model_identifier", object.get("geometry_name"));
+        }
+
+        if (object.has("meta") && object.get("meta").isJsonObject()) {
+            JsonObject meta = object.getAsJsonObject("meta");
+            if (!meta.has("format_version") && meta.has("format")) {
+                meta.add("format_version", meta.get("format"));
+            }
+        }
+
+        BbModel model = gson.fromJson(object, BbModel.class);
         models.put(name, model);
 
+        return model;
+    }
+
+    public static BbModel loadFromJson(String json, String name) {
+        if (json == null || json.isBlank()) throw new IllegalArgumentException("json must not be blank");
+        if (json.startsWith("<lz>")) throw new IllegalArgumentException("Compressed bbmodel not supported");
+        JsonObject object = JsonParser.parseString(json).getAsJsonObject();
+        if (!object.has("elements") && object.has("cubes")) object.add("elements", object.get("cubes"));
+        if (!object.has("model_identifier") && object.has("geometry_name")) object.add("model_identifier", object.get("geometry_name"));
+        if (object.has("meta") && object.get("meta").isJsonObject()) {
+            JsonObject meta = object.getAsJsonObject("meta");
+            if (!meta.has("format_version") && meta.has("format")) meta.add("format_version", meta.get("format"));
+        }
+        BbModel model = gson.fromJson(object, BbModel.class);
+        if (name != null && !name.isBlank()) models.put(name, model);
         return model;
     }
 

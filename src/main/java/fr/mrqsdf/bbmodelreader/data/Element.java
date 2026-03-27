@@ -34,7 +34,7 @@ public class Element {
         return locked;
     }
 
-    public int getLightEmission() {
+    public Integer getLightEmission() {
         return light_emission;
     }
 
@@ -54,11 +54,11 @@ public class Element {
         return to;
     }
 
-    public int getAutoUv() {
+    public Integer getAutoUv() {
         return autouv;
     }
 
-    public int getColor() {
+    public Integer getColor() {
         return color;
     }
 
