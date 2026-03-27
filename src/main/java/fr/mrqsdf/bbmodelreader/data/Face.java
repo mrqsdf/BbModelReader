@@ -33,18 +33,27 @@ public class Face {
         return down;
     }
 
-    public class FaceValue {
+    public static class FaceValue {
         private float[] uv;
-        private Float texture;
+        private Integer texture;
+        private Integer rotation;
+        private String cullface;
 
         public float[] getUv() {
             return uv;
         }
 
-        public Float getTexture() {
+        public Integer getTexture() {
             return texture;
         }
 
+        public Integer getRotation() {
+            return rotation;
+        }
+
+        public String getCullface() {
+            return cullface;
+        }
     }
 
 }

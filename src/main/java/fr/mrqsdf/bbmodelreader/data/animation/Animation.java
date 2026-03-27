@@ -8,14 +8,14 @@ public class Animation {
     private String name;
     private String loop;
     private boolean override;
-    private int length;
+    private Float length;
     private int snapping;
     private boolean selected;
     private String anim_time_update;
     private String blend_weight;
     private String start_delay;
     private String loop_delay;
-    private Map<Object, Animator> animators;
+    private Map<String, Animator> animators;
 
     private String animation_variable_placeholders;
 
@@ -35,7 +35,7 @@ public class Animation {
         return override;
     }
 
-    public int getLength() {
+    public Float getLength() {
         return length;
     }
 
@@ -63,7 +63,7 @@ public class Animation {
         return loop_delay;
     }
 
-    public Map<Object, Animator> getAnimators() {
+    public Map<String, Animator> getAnimators() {
         return animators;
     }
 
